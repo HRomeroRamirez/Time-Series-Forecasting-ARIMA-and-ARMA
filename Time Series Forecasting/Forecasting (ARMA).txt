@@ -1,0 +1,54 @@
+# variables
+X = X_M_NX$X
+z <- ts(X, start = c(2008, 1), frequency = 12)
+X=z
+
+### COmandos para hacer pruebas de Raices Unitarias, etc.
+
+############################Paquetes
+#install.packages("tseries")
+
+library(tseries)
+
+###### Raices Unitarias#####
+
+adf.test(X)   #variable debe ser cambiada por la variable que se quiere someter a prueba
+
+
+
+###### Autocorrelacion parcial para saber AR(p) ######
+
+
+pacf(X)   #variable debe ser cambiada por la variable que se quiere someter a prueba
+
+
+
+###### Autocorrelacion para saber MA(q) ######
+
+acf(X)   #variable debe ser cambiada por la variable que se quiere someter a prueba
+
+
+# Fit the AR model to international trade##################################
+AR <- arima(X, order = c(8, 0, 10),seasonal = list(order = c (1,0,0)))
+print(AR)
+
+# Run the following commands to plot the series and fitted values
+ts.plot(X, xlim= c (2008, 2023))
+AR_fitted <- X - residuals(AR)
+points(AR_fitted, type = "l", col = 2, lty = 2)
+
+# Use predict() to make a 1-step forecast
+predict_AR <- predict(AR_fitted, n.ahead = 12 )
+
+# Obtain the 1-step forecast using $pred
+predict_AR$pred
+
+
+
+# Run to plot the X series plus the forecast and 95% prediction intervals
+ts.plot(X, xlim= c (2008, 2023))
+AR_forecast <- predict(AR, n.ahead = 12)$pred
+AR_forecast_se <- predict(AR, n.ahead = 12)$se
+points(AR_forecast, type = "l", col = 2)
+points(AR_forecast - 2*AR_forecast_se, type = "l", col = 2, lty = 3)
+points(AR_forecast + 2*AR_forecast_se, type = "l", col = 2, lty = 2)
